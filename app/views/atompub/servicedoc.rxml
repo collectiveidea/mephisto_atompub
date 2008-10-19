@@ -1,0 +1,12 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+
+xml.service "xmlns" => 'http://www.w3.org/2007/app', "xmlns:atom" => 'http://www.w3.org/2005/Atom' do
+  xml.workspace do
+    xml.atom :title, site.title
+    @sections.each do |section|
+      xml.collection "href" => collection_url(section.path) do
+        xml.atom :title, section.name
+      end
+    end
+  end
+end
