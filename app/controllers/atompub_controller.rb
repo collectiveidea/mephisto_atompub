@@ -1,11 +1,10 @@
 class AtompubController < ApplicationController
   include AuthenticatedSystem
-  before_filter :basic_auth_required, :only => [:add_entry_to_collection]
+  before_filter :basic_auth_required, :find_section, :except => [:servicedoc]
 
   layout nil
   session :off
   
-  before_filter :find_section, :except => [:servicedoc]
   # cache_sweeper :article_sweeper, :assigned_section_sweeper, :comment_sweeper
 
   def servicedoc
@@ -19,7 +18,7 @@ class AtompubController < ApplicationController
   end
 
   def create
-    article = Article.from_atom(request.body)
+    article = Article.new(atom_params)
     article.updater = current_user
     article.site = site
     current_user.articles << article
@@ -28,9 +27,23 @@ class AtompubController < ApplicationController
   end
   
 private
+
+  # Fix mephisto to store current user when authenticating with basic auth
+  def basic_auth_required
+    self.current_user = super
+  end
   
   def find_section
     @section = site.sections.find_by_path(params[:sections].join('/'))
+  end
+  
+  def atom_params
+    atom = XmlSimple.xml_in(request.body, "ForceArray" => false)
+    {
+      :title => atom["title"]["content"],
+      :body => atom["content"]["content"],
+      :published_at => atom["control"] && atom["control"]["draft"] == "no" ? Time.now : nil
+    }
   end
   
 end

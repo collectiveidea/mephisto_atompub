@@ -1,9 +1,14 @@
 require File.dirname(__FILE__) + '/test_helper'
 
+class AtompubController < ApplicationController
+  def rescue_action(e); raise e; end
+end
+
 class AtompubControllerTest < Test::Unit::TestCase
   def setup
     @controller = AtompubController.new
-    @request, @response = ActionController::TestRequest.new, ActionController::TestResponse.new
+    @request = ActionController::TestRequest.new
+    @response = ActionController::TestResponse.new
   end
   
   def test_controller_is_available
