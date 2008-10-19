@@ -18,7 +18,7 @@ class AtompubController < ApplicationController
     @articles = @section.articles.find_by_date(:limit => 15, :include => :user)
   end
 
-  def add_entry_to_collection
+  def create
     article = Article.from_atom(request.body)
     article.updater = current_user
     article.site = site
