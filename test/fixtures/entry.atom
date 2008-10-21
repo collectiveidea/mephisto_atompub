@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<entry xmlns="http://www.w3.org/2005/Atom">
+  <title>From the &lt;APE&gt; (\343\202\265\343\203\253)</title>
+  <author>
+    <name>The Atom Protocol Exerciser</name>
+  </author>
+  <id>tag:tbray.org,2005:62130468475987779229498279856</id>
+  <updated>2008-10-20T14:41:12-07:00</updated>
+  <link href="http://www.tbray.org/ape"/>
+  <summary type="html">Summary from the &lt;b&gt;&amp;lt;&amp;nbsp;APE&amp;nbsp;&gt;&lt;/b&gt; at 2008-10-20T14:41:12-07:00</summary>
+  <content type="xhtml">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A test post from the &lt;APE&gt; at 2008-10-20T14:41:12-07:00</p>
+      <p>If you see this in an entry, it's probably a left-over from an unsuccessful Ape run; feel free to delete it.</p>
+    </div>
+  </content>
+  <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/">Simians</dc:subject>
+  <atom:category xmlns:atom="http://www.w3.org/2005/Atom" term="simians" scheme="http://tbray.org/cat-test"/>
+</entry>

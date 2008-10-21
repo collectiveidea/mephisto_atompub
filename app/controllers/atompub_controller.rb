@@ -1,6 +1,9 @@
+require 'atom/entry'
+
 class AtompubController < ApplicationController
   include AuthenticatedSystem
-  before_filter :basic_auth_required, :find_section, :except => [:servicedoc]
+  before_filter :basic_auth_required, :except => [:servicedoc, :index]
+  before_filter :find_section, :except => [:servicedoc]
 
   layout nil
   session :off
@@ -18,11 +21,8 @@ class AtompubController < ApplicationController
   end
 
   def create
-    article = Article.new(atom_params)
-    article.updater = current_user
-    article.site = site
-    current_user.articles << article
-    article.sections << @section
+    article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
+    article.section_ids = [@section.id]
     render :partial => "article", :locals => {:article => article}, :status => :created, :location => "http://#{request.host_with_port}#{request.relative_url_root}#{section_url_for article}"
   end
   
@@ -34,16 +34,28 @@ private
   end
   
   def find_section
-    @section = site.sections.find_by_path(params[:sections].join('/'))
+    @section = site.sections.find_by_path(params[:sections].join('/')) || raise(ActiveRecord::RecordNotFound, "Could not find section for #{params[:sections].inspect}")
   end
   
   def atom_params
-    atom = XmlSimple.xml_in(request.body, "ForceArray" => false)
+    # debugger
+    entry = Atom::Entry.parse(request.raw_post)
     {
-      :title => atom["title"]["content"],
-      :body => atom["content"]["content"],
-      :published_at => atom["control"] && atom["control"]["draft"] == "no" ? Time.now : nil
+      :title => entry.title.to_s,
+      :body => entry.content.to_s,
+      :published_at => entry.draft? ? nil : Time.now
     }
+  end
+  
+  helper_method :section_url_for
+  def section_url_for(article)
+    if @section && @section.show_paged_articles?
+      @section_articles ||= {}
+      @section_articles[@section.id] ||= (@section.articles.find(:first) || :false)
+      ([nil] << (@section_articles[@section.id].permalink == article.permalink ? @section.to_url : @section.to_page_url(article))).join("/")
+    else
+      site.permalink_for(article)
+    end
   end
   
 end

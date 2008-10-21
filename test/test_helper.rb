@@ -1,15 +1,9 @@
-require 'test/unit'
-require File.expand_path(File.join(File.dirname(__FILE__), '../../../../config/environment'))
-require 'action_controller/test_process'
-require 'application'
+ENV["RAILS_ENV"] = "test"
+require File.expand_path(File.dirname(__FILE__) + "/../../../../test/test_helper")
+require 'test_help'
 
-# This pair of methods lets us easily use assert_select on XML docs
-# thanks to Jamis Buck: http://weblog.jamisbuck.org/2007/1/4/assert_xml_select
-def xml_document
-  @xml_document ||= HTML::Document.new(@response.body, false, true)
-end
-
-def assert_xml_select(*args)
-  @html_document = xml_document
-  assert_select(*args)
+class ActionController::Integration::Session
+  def basic_auth_for(login)
+    {'authorization' => "Basic #{Base64.encode64("#{login}:test")}"}
+  end
 end

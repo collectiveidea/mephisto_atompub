@@ -3,7 +3,7 @@ xml.entry 'xml:base' => home_url do
     xml.name article.user.login
   end
   xml.id        "tag:#{request.host_with_port},#{article.published_at.to_date.to_s :db}:#{article.id}"
-  xml.published article.published_at.xmlschema
+  xml.published article.published_at.xmlschema if article.published_at?
   xml.updated   article.updated_at.xmlschema
   article.sections.each do |section|
     xml.category "term" => section.name unless section.home?
@@ -15,12 +15,10 @@ xml.entry 'xml:base' => home_url do
     "href" => "http://#{request.host_with_port}#{request.relative_url_root}#{section_url_for article}"
   xml.title     strip_tags(article.title)
   unless article.excerpt_html.blank?
-    xm << %{<summary type="html">#{sanitize_feed_content article.excerpt_html}</summary>}
+    xml.summary sanitize_feed_content(article.excerpt_html), :type => 'html'
   end
   unless article.body_html.blank?
-    xm << %{<content type="html">
-            #{sanitize_feed_content [article.excerpt_html, article.body_html].compact * "\n"}
-          </content>}
+    xml.content sanitize_feed_content([article.excerpt_html, article.body_html].compact * "\n"), :type => 'html'
   end
   article.add_xml(xml)
 end

@@ -1,20 +1,18 @@
-require File.dirname(__FILE__) + '/test_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
+require 'atompub_controller'
 
 class AtompubController < ApplicationController
   def rescue_action(e); raise e; end
 end
 
 class AtompubControllerTest < Test::Unit::TestCase
+  fixtures :users, :sites, :sections
+  
   def setup
     @controller = AtompubController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
-  end
-  
-  def test_controller_is_available
-    assert_not_nil @controller
-    assert_not_nil @request
-    assert_not_nil @response
+    authorize_as :quentin
   end
   
   def test_servicedoc
@@ -30,7 +28,10 @@ class AtompubControllerTest < Test::Unit::TestCase
   end
   
   def test_create
+    @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../fixtures/entry.atom')
     post :create, :sections => []
+    assert_response 201
+    assert_redirected_to 
   end
   
 end
