@@ -2,8 +2,9 @@ require 'atom/entry'
 
 class AtompubController < ApplicationController
   include AuthenticatedSystem
+  skip_before_filter :login_required
   before_filter :basic_auth_required, :except => [:servicedoc, :index]
-  before_filter :find_section, :except => [:servicedoc]
+  before_filter :find_section, :except => [:servicedoc, :show]
 
   layout nil
   session :off
@@ -12,18 +13,26 @@ class AtompubController < ApplicationController
 
   def servicedoc
     @sections = site.sections
-    headers['Content-Type'] = 'application/atomsvc+xml; charset=utf-8'
+    render :content_type => 'application/atomsvc+xml; charset=utf-8'
   end
 
   def index
-    headers['Content-Type'] = 'application/atom+xml; charset=utf-8'
     @articles = @section.articles.find_by_date(:limit => 15, :include => :user)
+    render :content_type => 'application/atom+xml; charset=utf-8'
   end
 
   def create
     article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
     article.section_ids = [@section.id]
-    render :partial => "article", :locals => {:article => article}, :status => :created, :location => "http://#{request.host_with_port}#{request.relative_url_root}#{section_url_for article}"
+    render :partial => "article", :locals => {:article => article}, :status => :created,
+      :content_type => 'application/atom+xml; charset=utf-8',
+      :location => collection_entry_url(article)
+  end
+  
+  def show
+    article = @site.articles.find(params[:id])
+    render :partial => "article", :locals => {:article => article},
+      :content_type => 'application/atom+xml; charset=utf-8'
   end
   
 private

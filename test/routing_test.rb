@@ -20,9 +20,9 @@ class RoutingTest < Test::Unit::TestCase
   end
   
   def test_show
-    options = {:controller => 'atompub', :action => 'show', :id => 3, :sections => ['foo']}
-    assert_generates '/collection/foo/3', options
-    assert_recognizes options, {:path => '/collection/foo/3', :method => 'get'}
+    options = {:controller => 'atompub', :action => 'show', :id => '3'}
+    assert_generates '/collection/3', options
+    assert_recognizes options, {:path => '/collection/3', :method => 'get'}
   end
 
   def test_create

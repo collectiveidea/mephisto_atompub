@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
+
 class AtompubTest < ActionController::IntegrationTest
   fixtures :users, :sections, :sites
   
@@ -26,7 +27,10 @@ class AtompubTest < ActionController::IntegrationTest
     user = visit
     user.post collection_path, fixture_data('entry.atom'), basic_auth_for(:quentin)
     user.assert_response 201
-    user.get user.response.headers['Location'], nil, basic_auth_for(:quentin)
+    user.assert_equal 'application/atom+xml', user.response.content_type
+    
+    user.get user.response.headers['Location'], {}, basic_auth_for(:quentin)
+    user.assert_response :success
     user.assert_equal 'application/atom+xml', user.response.content_type
   end
   

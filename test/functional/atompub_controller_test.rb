@@ -29,9 +29,9 @@ class AtompubControllerTest < Test::Unit::TestCase
   
   def test_create
     @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../fixtures/entry.atom')
-    post :create, :sections => []
+    post :create, :sections => ['about']
     assert_response 201
-    assert_redirected_to 
+    # assert_equal '', @response.headers['Location']
   end
   
 end
