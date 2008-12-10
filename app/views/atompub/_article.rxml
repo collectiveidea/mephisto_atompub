@@ -1,24 +1,24 @@
-xml.entry 'xml:base' => home_url do
-  xml.author do
-    xml.name article.user.login
+xm.entry 'xml:base' => home_url, "xml:lang" => "#{site.lang || 'en-US'}", "xmlns" => 'http://www.w3.org/2005/Atom' do
+  xm.author do
+    xm.name article.user.login
   end
-  xml.id        "tag:#{request.host_with_port},#{article.published_at.to_date.to_s :db}:#{article.id}"
-  xml.published article.published_at.xmlschema if article.published_at?
-  xml.updated   article.updated_at.xmlschema
+  xm.id "tag:#{request.host_with_port},#{article.created_at.to_date.to_s :db}:#{article.id}"
+  xm.published article.published_at.xmlschema if article.published_at?
+  xm.updated   article.updated_at.xmlschema
   article.sections.each do |section|
-    xml.category "term" => section.name unless section.home?
+    xm.category "term" => section.name unless section.home?
   end
   article.tags.each do |tag|
-    xml.category "term" => tag.name
+    xm.category "term" => tag.name
   end
-  xml.link "rel" => "alternate", "type" => "text/html", 
+  xm.link "rel" => "alternate", "type" => "text/html", 
     "href" => "http://#{request.host_with_port}#{relative_url_root}#{section_url_for article}"
-  xml.title     strip_tags(article.title)
+  xm.title article.title
   unless article.excerpt_html.blank?
-    xml.summary sanitize_feed_content(article.excerpt_html), :type => 'html'
+    xm.summary sanitize_feed_content(article.excerpt_html), :type => 'html'
   end
   unless article.body_html.blank?
-    xml.content sanitize_feed_content([article.excerpt_html, article.body_html].compact * "\n"), :type => 'html'
+    xm.content [article.excerpt_html, article.body_html].compact * "\n", :type => 'html'
   end
-  article.add_xml(xml)
+  article.add_xml(xm)
 end
