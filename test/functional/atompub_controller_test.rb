@@ -22,6 +22,7 @@ class AtompubControllerTest < Test::Unit::TestCase
   end
 
   def test_index_template
+    Article.update_all(['published_at = ?', Time.now])
     get :index, :sections => []
     assert_response :success
     assert_template 'index'

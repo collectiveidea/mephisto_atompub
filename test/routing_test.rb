@@ -32,14 +32,14 @@ class RoutingTest < Test::Unit::TestCase
   end
 
   def test_update
-    options = {:controller => 'atompub', :action => 'update', :sections => ['foo']}
-    assert_generates '/collection/foo', options
-    assert_recognizes options, {:path => '/collection/foo', :method => 'put'}
+    options = {:controller => 'atompub', :action => 'update', :id => '3'}
+    assert_generates '/collection/3', options
+    assert_recognizes options, {:path => '/collection/3', :method => 'put'}
   end
 
   def test_destroy
-    options = {:controller => 'atompub', :action => 'destroy', :sections => ['foo']}
-    assert_generates '/collection/foo', options
-    assert_recognizes options, {:path => '/collection/foo', :method => 'delete'}
+    options = {:controller => 'atompub', :action => 'destroy', :id => '3'}
+    assert_generates '/collection/3', options
+    assert_recognizes options, {:path => '/collection/3', :method => 'delete'}
   end
 end

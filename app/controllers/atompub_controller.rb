@@ -3,8 +3,8 @@ require 'atom/entry'
 class AtompubController < ApplicationController
   include AuthenticatedSystem
   skip_before_filter :login_required
-  before_filter :basic_auth_required, :except => [:servicedoc, :index]
-  before_filter :find_section, :except => [:servicedoc, :show]
+  before_filter :basic_auth_required, :except => [:servicedoc, :categories, :index]
+  before_filter :find_section, :only => [:index, :create]
 
   layout nil
   session :off
@@ -15,26 +15,41 @@ class AtompubController < ApplicationController
     @sections = site.sections
     render :content_type => 'application/atomsvc+xml; charset=utf-8'
   end
+  
+  def categories
+    @tags = site.tags
+    render :content_type => 'application/atomcat+xml'
+  end
 
   def index
     @articles = @section.articles.find_by_date(:limit => 15, :include => :user)
     render :content_type => 'application/atom+xml; charset=utf-8'
   end
 
-  def create
-    article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
-    article.section_ids = [@section.id]
-    render :partial => "article", :locals => {:article => article}, :status => :created,
-      :content_type => 'application/atom+xml; charset=utf-8',
-      :location => collection_entry_url(article)
-  end
-  
   def show
-    article = @site.articles.find(params[:id])
-    render :partial => "article", :locals => {:article => article},
-      :content_type => 'application/atom+xml; charset=utf-8'
+    @article = @site.articles.find(params[:id])
+    render :action => "show", :content_type => 'application/atom+xml; charset=utf-8'
   end
   
+  def create
+    @article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
+    @article.section_ids = [@section.id]
+    render :action => "show", :status => :created,
+      :content_type => 'application/atom+xml; charset=utf-8',
+      :location => collection_entry_url(@article)
+  end
+  
+  def update
+    @article = @site.articles.find(params[:id])
+    render :action => "show", :content_type => 'application/atom+xml; charset=utf-8'
+  end
+  
+  def destroy
+    @article = @site.articles.find(params[:id])
+    @article.destroy
+    render :nothing => true, :status => 200
+  end
+
 private
 
   # Fix mephisto to store current user when authenticating with basic auth
@@ -52,7 +67,8 @@ private
     {
       :title => entry.title.to_s,
       :body => entry.content.to_s,
-      :published_at => entry.draft? ? nil : Time.now
+      :published_at => entry.draft? ? nil : Time.now,
+      :tag => entry.categories.map(&:term).join(', ')
     }
   end
   
