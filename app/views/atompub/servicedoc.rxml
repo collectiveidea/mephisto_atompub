@@ -7,6 +7,7 @@ xml.app :service, "xmlns:app" => 'http://www.w3.org/2007/app',
     @sections.each do |section|
       xml.app :collection, "href" => collection_url(section.path) do
         xml.atom :title, section.name
+        xml.app :accept, "application/atom+xml;type=entry"
         xml.app :categories, :href => categories_url
       end
     end

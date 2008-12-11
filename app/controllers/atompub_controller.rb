@@ -35,7 +35,7 @@ class AtompubController < ApplicationController
     @article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
     @article.section_ids = [@section.id]
     render :action => "show", :status => :created,
-      :content_type => 'application/atom+xml; charset=utf-8',
+      :content_type => 'application/atom+xml;type=entry;charset=utf-8',
       :location => collection_entry_url(@article)
   end
   
