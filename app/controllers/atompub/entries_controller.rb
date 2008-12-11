@@ -1,14 +1,8 @@
 require 'atom/entry'
 
-class Atompub::EntriesController < ApplicationController
-  include AuthenticatedSystem
-  skip_before_filter :login_required
+class Atompub::EntriesController < AtompubController
   before_filter :basic_auth_required, :except => [:servicedoc, :categories, :index]
   before_filter :find_section, :only => [:index, :create]
-
-  layout nil
-  session :off
-  
   # cache_sweeper :article_sweeper, :assigned_section_sweeper, :comment_sweeper
 
   def servicedoc
@@ -52,18 +46,11 @@ class Atompub::EntriesController < ApplicationController
 
 private
 
-  # Fix mephisto to store current user when authenticating with basic auth
-  def basic_auth_required
-    user = super
-    self.current_user = user if User === user
-  end
-  
   def find_section
     @section = site.sections.find_by_path(params[:sections].join('/')) || raise(ActiveRecord::RecordNotFound, "Could not find section for #{params[:sections].inspect}")
   end
   
   def atom_params
-    # debugger
     entry = Atom::Entry.parse(request.raw_post)
     {
       :title => entry.title.to_s,

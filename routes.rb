@@ -9,3 +9,9 @@ map.with_options :controller => 'atompub/entries' do |m|
   m.collection 'collection/*sections', :action => 'index', :conditions => { :method => :get }
   m.connect 'collection/*sections', :action => 'create', :conditions => { :method => :post }
 end
+
+map.with_options :controller => 'atompub/assets' do |m|
+  m.atompub_assets 'atompub/assets', :action => 'create', :conditions => {:method => :post}
+  m.atompub_asset 'atompub/assets/:id', :action => 'show', :conditions => {:method => :get},
+    :requirements => {:id => /\d+/}
+end

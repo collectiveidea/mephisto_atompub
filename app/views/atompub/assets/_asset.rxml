@@ -1,0 +1,18 @@
+xml.entry 'xml:base' => home_url, 'xml:lang' => "#{site.lang || 'en-US'}", "xmlns" => 'http://www.w3.org/2005/Atom' do
+  xml.author do
+    xml.name asset.user.login
+  end
+  xml.id "tag:#{request.host_with_port},#{asset.created_at.to_date.to_s :db}:#{asset.id}"
+  xml.title asset.title
+  xml.published asset.created_at.xmlschema
+  # xml.updated   article.updated_at.xmlschema
+  # article.sections.each do |section|
+  #   xml.category "term" => section.name unless section.home?
+  # end
+  # article.tags.each do |tag|
+  #   xml.category "term" => tag.name
+  # end
+  xml.content :type => asset.content_type, :src => asset.public_filename
+  xml.link :rel => 'edit-media', :href => asset.public_filename
+  xml.link :rel => 'edit', :href => atompub_asset_url(asset)
+end 
