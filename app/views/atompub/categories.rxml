@@ -4,7 +4,7 @@ xml.app :categories, 'xml:lang' => site.lang || 'en-US',
       'xmlns:app' => 'http://www.w3.org/2007/app',
       'xmlns:atom' => 'http://www.w3.org/2005/Atom',
       :fixed => "no", :scheme => url_for(:only_path => false) do
-  @site.sections.each do |section|
+  @site.tags.each do |section|
     xml.atom :category, :term => section.name
   end
 end

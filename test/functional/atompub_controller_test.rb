@@ -6,7 +6,7 @@ class AtompubController < ApplicationController
 end
 
 class AtompubControllerTest < Test::Unit::TestCase
-  fixtures :users, :sites, :sections
+  fixtures :users, :sites, :sections, :contents
   
   def setup
     @controller = AtompubController.new
@@ -19,6 +19,17 @@ class AtompubControllerTest < Test::Unit::TestCase
     get :servicedoc
     assert_response :success
     assert_template 'servicedoc'
+    assert_xpath '/app:service/app:workspace/atom:title/[.="Mephisto"]'
+  end
+  
+  def test_categories
+    contents(:welcome).update_attribute :tag, "foo, bar, baz"
+    get :categories
+    assert_response :success
+    assert_equal 'application/atomcat+xml', @response.content_type
+    assert_xpath '/app:categories/atom:category[@term="foo"]'
+    assert_xpath '/app:categories/atom:category[@term="bar"]'
+    assert_xpath '/app:categories/atom:category[@term="baz"]'
   end
 
   def test_index_template
@@ -32,7 +43,7 @@ class AtompubControllerTest < Test::Unit::TestCase
     @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../fixtures/entry.atom')
     post :create, :sections => ['about']
     assert_response 201
-    # assert_equal '', @response.headers['Location']
+    assert_equal 'application/atom+xml', @response.content_type
   end
   
 end
