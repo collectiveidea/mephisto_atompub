@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../test_helper')
 
-class AtompubControllerTest < ActionController::TestCase
+class Atompub::EntriesControllerTest < ActionController::TestCase
   fixtures :users, :sites, :sections, :contents
   
   def setup
@@ -32,7 +32,7 @@ class AtompubControllerTest < ActionController::TestCase
   end
   
   test "create" do
-    @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../fixtures/entry.atom')
+    @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../../fixtures/entry.atom')
     post :create, :sections => ['about']
     assert_response 201
     assert_equal 'application/atom+xml', @response.content_type

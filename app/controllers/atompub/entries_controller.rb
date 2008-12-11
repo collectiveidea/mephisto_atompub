@@ -1,6 +1,6 @@
 require 'atom/entry'
 
-class AtompubController < ApplicationController
+class Atompub::EntriesController < ApplicationController
   include AuthenticatedSystem
   skip_before_filter :login_required
   before_filter :basic_auth_required, :except => [:servicedoc, :categories, :index]

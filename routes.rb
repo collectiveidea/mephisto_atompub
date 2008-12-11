@@ -1,4 +1,4 @@
-map.with_options :controller => 'atompub' do |m|
+map.with_options :controller => 'atompub/entries' do |m|
   m.categories 'categories', :action => 'categories', :conditions => { :method => :get }
   m.servicedoc 'servicedoc', :action => 'servicedoc', :conditions => { :method => :get }
   m.with_options :requirements => {:id => /\d+/} do |member|
