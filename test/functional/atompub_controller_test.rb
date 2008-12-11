@@ -1,28 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
-require 'atompub_controller'
 
-class AtompubController < ApplicationController
-  def rescue_action(e); raise e; end
-end
-
-class AtompubControllerTest < Test::Unit::TestCase
+class AtompubControllerTest < ActionController::TestCase
   fixtures :users, :sites, :sections, :contents
   
   def setup
-    @controller = AtompubController.new
-    @request = ActionController::TestRequest.new
-    @response = ActionController::TestResponse.new
     authorize_as :quentin
   end
   
-  def test_servicedoc
+  test "servicedoc" do
     get :servicedoc
     assert_response :success
     assert_template 'servicedoc'
     assert_xpath '/app:service/app:workspace/atom:title/[.="Mephisto"]'
   end
   
-  def test_categories
+  test "categories" do
     contents(:welcome).update_attribute :tag, "foo, bar, baz"
     get :categories
     assert_response :success
@@ -32,33 +24,33 @@ class AtompubControllerTest < Test::Unit::TestCase
     assert_xpath '/app:categories/atom:category[@term="baz"]'
   end
 
-  def test_index_template
+  test "index" do
     Article.update_all(['published_at = ?', Time.now])
     get :index, :sections => []
     assert_response :success
     assert_template 'index'
   end
   
-  def test_create
+  test "create" do
     @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../fixtures/entry.atom')
     post :create, :sections => ['about']
     assert_response 201
     assert_equal 'application/atom+xml', @response.content_type
   end
   
-  def test_show
+  test "show" do
     get :show, :id => contents(:welcome)
     assert_response :success
     assert_equal 'application/atom+xml', @response.content_type
   end
   
-  def test_update
+  test "update" do
     put :update, :id => contents(:welcome)
     assert_response :success
     assert_equal 'application/atom+xml', @response.content_type
   end
 
-  def test_destroy
+  test "destroy" do
     delete :destroy, :id => contents(:welcome)
     assert_response :success
     assert !Article.exists?(contents(:welcome).id)

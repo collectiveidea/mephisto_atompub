@@ -3,27 +3,27 @@ require File.dirname(__FILE__) + '/../test_helper'
 class AtompubTest < ActionController::IntegrationTest
   fixtures :users, :sections, :sites, :contents
   
-  def test_visitor_can_access_service_doc
+  test "visitor can access service doc" do
     visitor = visit
     visitor.get servicedoc_path
     visitor.assert_response :success
     visitor.assert_equal 'application/atomsvc+xml', visitor.response.content_type
   end
 
-  def test_visitor_can_access_index
+  test "visitor can access index" do
     visitor = visit
     visitor.get collection_path
     visitor.assert_response :success
     visitor.assert_equal 'application/atom+xml', visitor.response.content_type
   end
   
-  def test_visitor_cannot_create
+  test "visitor cannot create" do
     visitor = visit
     visitor.post collection_path
     visitor.assert_response 401
   end
   
-  def test_create
+  test "create" do
     user = visit
     user.post collection_path, fixture_data('entry.atom'), basic_auth_for(:quentin)
     

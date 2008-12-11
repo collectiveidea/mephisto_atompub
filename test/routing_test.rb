@@ -1,43 +1,44 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class RoutingTest < Test::Unit::TestCase
-  def test_servicedoc
+class RoutingTest < ActiveSupport::TestCase
+  
+  test "servicedoc" do
     options = {:controller => 'atompub', :action => 'servicedoc'}
     assert_generates '/servicedoc', options
     assert_recognizes options, {:path => '/servicedoc', :method => 'get'}
   end
 
-  def test_collection_without_section
+  test "collection without section" do
     options = {:controller => 'atompub', :action => 'index', :sections => []}
     assert_generates '/collection', options
     assert_recognizes options, '/collection'
   end
 
-  def test_collection
+  test "collection with section" do
     options = {:controller => 'atompub', :action => 'index', :sections => ['foo']}
     assert_generates '/collection/foo', options
     assert_recognizes options, '/collection/foo'
   end
   
-  def test_show
+  test "show" do
     options = {:controller => 'atompub', :action => 'show', :id => '3'}
     assert_generates '/collection/3', options
     assert_recognizes options, {:path => '/collection/3', :method => 'get'}
   end
 
-  def test_create
+  test "create" do
     options = {:controller => 'atompub', :action => 'create', :sections => ['foo']}
     assert_generates '/collection/foo', options
     assert_recognizes options, {:path => '/collection/foo', :method => 'post'}
   end
 
-  def test_update
+  test "update" do
     options = {:controller => 'atompub', :action => 'update', :id => '3'}
     assert_generates '/collection/3', options
     assert_recognizes options, {:path => '/collection/3', :method => 'put'}
   end
 
-  def test_destroy
+  test "destroy" do
     options = {:controller => 'atompub', :action => 'destroy', :id => '3'}
     assert_generates '/collection/3', options
     assert_recognizes options, {:path => '/collection/3', :method => 'delete'}
