@@ -54,7 +54,8 @@ private
 
   # Fix mephisto to store current user when authenticating with basic auth
   def basic_auth_required
-    self.current_user = super
+    user = super
+    self.current_user = user if User === user
   end
   
   def find_section
