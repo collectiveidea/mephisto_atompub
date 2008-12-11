@@ -46,4 +46,22 @@ class AtompubControllerTest < Test::Unit::TestCase
     assert_equal 'application/atom+xml', @response.content_type
   end
   
+  def test_show
+    get :show, :id => contents(:welcome)
+    assert_response :success
+    assert_equal 'application/atom+xml', @response.content_type
+  end
+  
+  def test_update
+    put :update, :id => contents(:welcome)
+    assert_response :success
+    assert_equal 'application/atom+xml', @response.content_type
+  end
+
+  def test_destroy
+    delete :destroy, :id => contents(:welcome)
+    assert_response :success
+    assert !Article.exists?(contents(:welcome).id)
+  end
+  
 end

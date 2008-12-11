@@ -26,40 +26,10 @@ class AtompubTest < ActionController::IntegrationTest
   def test_create
     user = visit
     user.post collection_path, fixture_data('entry.atom'), basic_auth_for(:quentin)
-    user.assert_response 201
-    user.assert_equal 'application/atom+xml', user.response.content_type
-    # assert_atom_equal('entry.atom', user.response.body)
     
     user.get user.response.headers['Location'], {}, basic_auth_for(:quentin)
     user.assert_response :success
     user.assert_equal 'application/atom+xml', user.response.content_type
-  end
-  
-  def test_show
-    user = visit
-    user.get collection_entry_path(contents(:welcome)), {}, basic_auth_for(:quentin)
-    user.assert_response :success
-    user.assert_equal 'application/atom+xml', user.response.content_type
-  end
-  
-  def test_update
-    user = visit
-    user.put collection_entry_path(contents(:welcome)), {}, basic_auth_for(:quentin)
-    user.assert_response :success
-    user.assert_equal 'application/atom+xml', user.response.content_type
-  end
-
-  def test_destroy
-    user = visit
-    user.delete collection_entry_path(contents(:welcome)), {}, basic_auth_for(:quentin)
-    user.assert_response :success
-  end
-  
-  def test_categories
-    user = visit
-    user.get categories_path
-    user.assert_response :success
-    user.assert_equal 'application/atomcat+xml', user.response.content_type
   end
   
 private
