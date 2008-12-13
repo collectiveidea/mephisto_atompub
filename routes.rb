@@ -10,8 +10,4 @@ map.with_options :controller => 'atompub/entries' do |m|
   m.connect 'collection/*sections', :action => 'create', :conditions => { :method => :post }
 end
 
-map.with_options :controller => 'atompub/assets' do |m|
-  m.atompub_assets 'atompub/assets', :action => 'create', :conditions => {:method => :post}
-  m.atompub_asset 'atompub/assets/:id', :action => 'show', :conditions => {:method => :get},
-    :requirements => {:id => /\d+/}
-end
+map.resources :assets, :controller => 'atompub/assets', :path_prefix => 'atompub', :name_prefix => 'atompub_'

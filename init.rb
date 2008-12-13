@@ -5,5 +5,5 @@ code_paths.each do |path|
 end
 
 Asset.class_eval do
-  belongs_to :user  unless method_defined?(:user)
+  belongs_to :user unless method_defined?(:user)
 end

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<entry xmlns="http://www.w3.org/2005/Atom">
+  <title>The Beach</title>
+  <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+  <updated>2005-10-07T17:17:08Z</updated>
+  <author><name>Daffy</name></author>
+  <summary type="text">
+      A nice sunset picture over the water.
+  </summary>
+  <content type="image/png"
+     src="http://media.example.org/the_beach.png"/>
+  <link rel="edit-media"
+     href="http://media.example.org/edit/the_beach.png" />
+  <link rel="edit"
+     href="http://example.org/media/edit/the_beach.atom" />
+  <atom:category xmlns:atom="http://www.w3.org/2005/Atom" term="duck" scheme="http://test.host/categories"/>
+</entry>
