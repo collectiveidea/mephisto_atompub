@@ -18,12 +18,12 @@ class Atompub::EntriesController < AtompubController
   def index
     @articles = @section.articles.published.by_date.paginate(:page => params[:page], :per_page => 15, :include => :user)
     
-    render :content_type => 'application/atom+xml; charset=utf-8'
+    render :content_type => 'application/atom+xml;type=feed;charset=utf-8'
   end
 
   def show
     @article = @site.articles.find(params[:id])
-    render :action => "show", :content_type => 'application/atom+xml; charset=utf-8'
+    render :action => "show", :content_type => 'application/atom+xml;type=entry;charset=utf-8'
   end
   
   def create
@@ -36,7 +36,7 @@ class Atompub::EntriesController < AtompubController
   
   def update
     @article = @site.articles.find(params[:id])
-    render :action => "show", :content_type => 'application/atom+xml; charset=utf-8'
+    render :action => "show", :content_type => 'application/atom+xml;type=entry;charset=utf-8'
   end
   
   def destroy
