@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../test_helper')
 
 class Atompub::EntriesControllerTest < ActionController::TestCase
-  fixtures :users, :sites, :sections, :contents
+  fixtures :users, :sites, :sections, :contents, :assigned_sections
   
   def setup
     authorize_as :quentin
@@ -31,8 +31,9 @@ class Atompub::EntriesControllerTest < ActionController::TestCase
     assert_template 'index'
     assert_equal 'application/atom+xml', @response.content_type
     
+    assert !assigns(:articles).empty?
     assigns(:articles).each do |article|
-      assert_xpath %(/feed/entry/link[@rel="edit"][@type="application/atom+xml"][@href="#{collection_entry_url(article)}"])
+      assert_xpath %(/feed/entry/link[@rel="edit"][@type="application/atom+xml;type=entry"][@href="#{collection_entry_url(article)}"])
       assert_xpath %(/feed/entry/app:edited[.="#{article.updated_at.xmlschema}"])
     end
   end

@@ -21,6 +21,6 @@ xml.entry 'xml:base' => home_url, "xml:lang" => "#{site.lang || 'en-US'}", "xmln
     xml.content [article.excerpt_html, article.body_html].compact * "\n", :type => 'html'
   end
   article.add_xml(xml)
-  xml.link :rel => 'edit', :type => 'application/atom+xml', :href => collection_entry_url(article)
+  xml.link :rel => 'edit', :type => 'application/atom+xml;type=entry', :href => collection_entry_url(article)
   xml.app :edited, article.updated_at.xmlschema
 end

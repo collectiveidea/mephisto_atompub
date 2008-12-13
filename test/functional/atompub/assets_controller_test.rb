@@ -35,7 +35,7 @@ class Atompub::AssetsControllerTest < ActionController::TestCase
     assert_xpath %(title)
     assert_xpath %(author/name[.="quentin"])
     assert_xpath %(content[@type="image/png"][@src="#{assigns(:asset).public_filename}"])
-    assert_xpath %(link[@rel="edit-media"][@href="#{assigns(:asset).public_filename}"])
+    assert_xpath %(link[@rel="edit-media"][@href="#{atompub_asset_url(assigns(:asset), :format => 'atom')}"])
     assert_xpath %(link[@rel="edit"][@href="#{atompub_asset_url(assigns(:asset))}"])
   end
   
