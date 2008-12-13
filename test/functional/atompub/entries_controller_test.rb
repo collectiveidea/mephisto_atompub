@@ -43,6 +43,15 @@ class Atompub::EntriesControllerTest < ActionController::TestCase
     post :create, :sections => ['about']
     assert_response 201
     assert_equal 'application/atom+xml', @response.content_type
+
+    assert assigns(:article).published?
+  end
+  
+  test "create draft" do
+    @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../../fixtures/draft-entry.atom')
+    post :create, :sections => []
+    assert_response 201
+    assert !assigns(:article).published?
   end
   
   test "show" do

@@ -1,7 +1,7 @@
 require 'atom/entry'
 
 class Atompub::EntriesController < AtompubController
-  before_filter :basic_auth_required, :except => [:servicedoc, :categories, :index]
+  before_filter :basic_auth_required, :except => [:servicedoc, :categories]
   before_filter :find_section, :only => [:index, :create]
   # cache_sweeper :article_sweeper, :assigned_section_sweeper, :comment_sweeper
 
@@ -16,7 +16,7 @@ class Atompub::EntriesController < AtompubController
   end
 
   def index
-    @articles = @section.articles.published.by_date.paginate(:page => params[:page], :per_page => 15, :include => :user)
+    @articles = @section.articles.by_date.paginate(:page => params[:page], :per_page => 15, :include => :user)
     
     render :content_type => 'application/atom+xml;type=feed;charset=utf-8'
   end

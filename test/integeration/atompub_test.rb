@@ -10,13 +10,6 @@ class AtompubTest < ActionController::IntegrationTest
     visitor.assert_equal 'application/atomsvc+xml', visitor.response.content_type
   end
 
-  test "visitor can access index" do
-    visitor = visit
-    visitor.get collection_path
-    visitor.assert_response :success
-    visitor.assert_equal 'application/atom+xml', visitor.response.content_type
-  end
-  
   test "visitor cannot create" do
     visitor = visit
     visitor.post collection_path

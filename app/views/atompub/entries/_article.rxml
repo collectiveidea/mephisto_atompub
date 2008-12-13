@@ -23,4 +23,7 @@ xml.entry 'xml:base' => home_url, "xml:lang" => "#{site.lang || 'en-US'}", "xmln
   article.add_xml(xml)
   xml.link :rel => 'edit', :type => 'application/atom+xml;type=entry', :href => collection_entry_url(article)
   xml.app :edited, article.updated_at.xmlschema
+  xml.app :control do
+    xml.app :draft, article.published? ? 'no' : 'yes'
+  end
 end
