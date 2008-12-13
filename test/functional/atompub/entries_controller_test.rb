@@ -29,6 +29,12 @@ class Atompub::EntriesControllerTest < ActionController::TestCase
     get :index, :sections => []
     assert_response :success
     assert_template 'index'
+    assert_equal 'application/atom+xml', @response.content_type
+    
+    assigns(:articles).each do |article|
+      assert_xpath %(/feed/entry/link[@rel="edit"][@type="application/atom+xml"][@href="#{collection_entry_url(article)}"])
+      assert_xpath %(/feed/entry/app:edited[.="#{article.updated_at.xmlschema}"])
+    end
   end
   
   test "create" do
