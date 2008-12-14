@@ -28,8 +28,9 @@ class Atompub::EntriesController < AtompubController
   end
   
   def create
-    @article = current_user.articles.create!(atom_params.merge(:updater => current_user, :site => site))
+    @article = current_user.articles.new(atom_params.merge(:updater => current_user, :site => site))
     @article.section_ids = [@section.id]
+    @article.save!
     render :action => "show", :status => :created,
       :content_type => 'application/atom+xml;type=entry;charset=utf-8',
       :location => collection_entry_url(@article)
@@ -56,9 +57,11 @@ private
     entry = Atom::Entry.parse(request.raw_post)
     {
       :title => entry.title.to_s,
+      :excerpt => entry.summary.to_s,
       :body => entry.content.to_s,
       :published_at => entry.draft? ? nil : Time.now,
-      :tag => entry.categories.map(&:term).join(', ')
+      :tag => entry.categories.map(&:term).join(', '),
+      :permalink => request.headers['Slug']
     }
   end
   

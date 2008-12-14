@@ -40,11 +40,15 @@ class Atompub::EntriesControllerTest < ActionController::TestCase
   
   test "create" do
     @request.env['RAW_POST_DATA'] = File.read(File.dirname(__FILE__) + '/../../fixtures/entry.atom')
-    post :create, :sections => ['about']
+    @request.env['Slug'] = 'suggested-slug'
+    
+    post :create, :sections => sections(:home).to_url
     assert_response 201
     assert_equal 'application/atom+xml', @response.content_type
 
     assert assigns(:article).published?
+    assert_equal 'suggested-slug', assigns(:article).permalink
+    assert_equal [sections(:home)], assigns(:article).sections
   end
   
   test "create draft" do
