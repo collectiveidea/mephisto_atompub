@@ -1,6 +1,6 @@
 map.with_options :controller => 'atompub/entries' do |m|
   m.categories 'categories', :action => 'categories', :conditions => { :method => :get }
-  m.servicedoc 'servicedoc', :action => 'servicedoc', :conditions => { :method => :get }
+  m.service 'service', :action => 'service', :conditions => { :method => :get }
   m.with_options :requirements => {:id => /\d+/} do |member|
     member.collection_entry 'collection/:id', :action => 'show', :conditions => { :method => :get }
     member.connect 'collection/:id', :action => 'update', :conditions => { :method => :put }

@@ -5,7 +5,7 @@ class Atompub::EntriesController < AtompubController
   before_filter :find_section, :only => [:index, :create]
   # cache_sweeper :article_sweeper, :assigned_section_sweeper, :comment_sweeper
 
-  def servicedoc
+  def service
     @sections = site.sections
     render :content_type => 'application/atomsvc+xml; charset=utf-8'
   end
