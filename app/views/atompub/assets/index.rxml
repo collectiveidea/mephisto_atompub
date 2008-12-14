@@ -1,0 +1,22 @@
+xml.instruct!
+
+xml.feed "xml:lang" => "#{site.lang || 'en-US'}", "xmlns" => 'http://www.w3.org/2005/Atom' do
+  xml.title "#{site.title || 'Mephisto'} - Assets"
+  xml.id "tag:#{request.host},#{Time.now.utc.year}:mephisto:assets"
+  xml.generator "Mephisto #{Mephisto::Version::TITLE}", :uri => "http://mephistoblog.com", :version => "#{Mephisto::Version::STRING}"
+  xml.link "rel" => "self", "type" => "application/atom+xml;type=feed", "href" => url_for(:only_path => false)
+  if @assets.total_pages > 1
+    xml.link :rel => 'first', :href => atompub_assets_url(:section => params[:section], :page => 1)
+    xml.link :rel => 'last',  :href => atompub_assets_url(:section => params[:section], :page => @assets.total_pages)
+    if @assets.current_page > 1
+      xml.link :rel => "previous", :href => atompub_assets_url(:section => params[:section], :page => @assets.current_page - 1)
+    end
+    if @assets.current_page < @assets.total_pages
+      xml.link :rel => "next", :href => atompub_assets_url(:section => params[:section], :page => @assets.current_page + 1)
+    end
+  end
+  unless @assets.empty?
+    xml.updated @assets.first.updated_at.xmlschema
+    xml << render(:partial => 'asset', :collection => @assets)
+  end
+end

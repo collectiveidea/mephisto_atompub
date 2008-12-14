@@ -7,16 +7,11 @@ class Atompub::AssetsControllerTest < ActionController::TestCase
     authorize_as :quentin
   end
 
-  test "routes for create" do
-    options = {:controller => 'atompub/assets', :action => 'create'}
-    assert_generates '/atompub/assets', options
-    assert_recognizes options, {:path => '/atompub/assets', :method => 'post'}
-  end
-
-  test "routes for show" do
-    options = {:controller => 'atompub/assets', :action => 'show', :id => '5'}
-    assert_generates '/atompub/assets/5', options
-    assert_recognizes options, {:path => '/atompub/assets/5', :method => 'get'}
+  test "index" do
+    get :index
+    assert_response :ok
+    assert_template 'index'
+    assert_equal 'application/atom+xml', @response.content_type
   end
 
   test "create" do
@@ -35,7 +30,7 @@ class Atompub::AssetsControllerTest < ActionController::TestCase
     assert_xpath %(title)
     assert_xpath %(author/name[.="quentin"])
     assert_xpath %(content[@type="image/png"][@src="#{assigns(:asset).public_filename}"])
-    assert_xpath %(link[@rel="edit-media"][@href="#{atompub_asset_url(assigns(:asset), :format => 'atom')}"])
+    assert_xpath %(link[@rel="edit-media"][@href="#{formatted_atompub_asset_url(assigns(:asset), :format => 'atom')}"])
     assert_xpath %(link[@rel="edit"][@href="#{atompub_asset_url(assigns(:asset))}"])
   end
   

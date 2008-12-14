@@ -11,5 +11,11 @@ xml.app :service, "xmlns:app" => 'http://www.w3.org/2007/app',
         xml.app :categories, :href => categories_url
       end
     end
+    xml.app :collection, :href => formatted_atompub_assets_url(:format => 'atom') do
+      xml.atom :title, 'Assets'
+      (Asset.content_types | Asset.extra_content_types.values.flatten).each do |type|
+        xml.app :accept, type
+      end
+    end
   end
 end

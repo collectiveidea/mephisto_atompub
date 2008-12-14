@@ -14,7 +14,7 @@ xml.entry 'xml:base' => home_url, 'xml:lang' => "#{site.lang || 'en-US'}",
     xml.category "term" => tag.name
   end
   xml.content :type => asset.content_type, :src => asset.public_filename
-  xml.link :rel => 'edit-media', :href => atompub_asset_url(asset, :format => 'atom'),
+  xml.link :rel => 'edit-media', :href => formatted_atompub_asset_url(asset, :format => 'atom'),
     :type => 'application/atom+xml;type=entry'
   xml.link :rel => 'edit', :href => atompub_asset_url(asset),
     :type => 'application/atom+xml;type=entry'

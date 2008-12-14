@@ -16,7 +16,8 @@ class Atompub::EntriesController < AtompubController
   end
 
   def index
-    @articles = @section.articles.by_date.paginate(:page => params[:page], :per_page => 15, :include => :user)
+    @articles = @section.articles.paginate(:order => 'contents.updated_at DESC', 
+      :page => params[:page], :per_page => 15, :include => :user)
     
     render :content_type => 'application/atom+xml;type=feed;charset=utf-8'
   end

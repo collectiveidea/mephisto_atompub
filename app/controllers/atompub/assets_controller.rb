@@ -2,6 +2,13 @@ require 'atom/entry'
 
 class Atompub::AssetsController < AtompubController
   before_filter :basic_auth_required
+  
+  def index
+    @assets = @site.assets.paginate(:order => 'assets.updated_at DESC', 
+      :page => params[:page], :per_page => 15)
+    
+    render :content_type => 'application/atom+xml;type=feed;charset=utf-8'
+  end
 
   def create
     @asset = site.assets.create!(:user_id => current_user.id, :uploaded_data => uploaded_data)
